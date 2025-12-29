@@ -1,15 +1,18 @@
 @import "tailwindcss";
 
+@theme {
+  /* Aqui definimos a paleta Valency */
+  --color-valency-light: #33CCFF;
+  --color-valency-sky: #2699E6;
+  --color-valency-main: #1A66CC;
+  --color-valency-deep: #0D33B3;
+  --color-valency-dark: #000099;
+}
+
+/* Configurações padrão do Next.js (opcional, mas bom manter) */
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
