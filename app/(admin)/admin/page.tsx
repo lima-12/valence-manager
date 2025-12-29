@@ -71,7 +71,7 @@ export default function AdminPage() {
   return (
     // Max-w-xl garante que em telas grandes não fique "esticado demais", mas no celular ocupa 100%
     <div className="max-w-xl mx-auto mt-6 md:mt-10 p-6 bg-white rounded-xl shadow-lg border border-slate-100">
-      <h1 className="text-2xl font-bold mb-6 text-valency-dark border-b pb-4 border-slate-100">
+      <h1 className="text-2xl font-bold mb-6 text-valence-dark border-b pb-4 border-slate-100">
         Cadastrar Produto
       </h1>
       
@@ -79,12 +79,12 @@ export default function AdminPage() {
         
         {/* Input estilizado com foco na cor da marca */}
         <div>
-          <label className="block text-sm font-bold text-valency-deep mb-1">Nome do Produto</label>
+          <label className="block text-sm font-bold text-valence-deep mb-1">Nome do Produto</label>
           <input 
             name="name" 
             type="text" 
             required 
-            className="w-full border-slate-300 border rounded-lg p-3 text-slate-800 outline-none focus:ring-2 focus:ring-valency-light focus:border-valency-main transition" 
+            className="w-full border-slate-300 border rounded-lg p-3 text-slate-800 outline-none focus:ring-2 focus:ring-valence-light focus:border-valence-main transition" 
             placeholder="Ex: Camisa Social Azul"
           />
         </div>
@@ -97,23 +97,23 @@ export default function AdminPage() {
 
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="block text-sm font-bold text-valency-deep mb-1">Preço (R$)</label>
+            <label className="block text-sm font-bold text-valence-deep mb-1">Preço (R$)</label>
             <input 
                 name="price" 
                 type="number" 
                 step="0.01" 
                 required 
-                className="w-full border-slate-300 border rounded-lg p-3 text-slate-800 outline-none focus:ring-2 focus:ring-valency-light focus:border-valency-main transition" 
+                className="w-full border-slate-300 border rounded-lg p-3 text-slate-800 outline-none focus:ring-2 focus:ring-valence-light focus:border-valence-main transition" 
                 placeholder="0,00"
             />
           </div>
           <div className="flex-1">
-            <label className="block text-sm font-bold text-valency-deep mb-1">Estoque</label>
+            <label className="block text-sm font-bold text-valence-deep mb-1">Estoque</label>
             <input 
                 name="quantity" 
                 type="number" 
                 required 
-                className="w-full border-slate-300 border rounded-lg p-3 text-slate-800 outline-none focus:ring-2 focus:ring-valency-light focus:border-valency-main transition" 
+                className="w-full border-slate-300 border rounded-lg p-3 text-slate-800 outline-none focus:ring-2 focus:ring-valence-light focus:border-valence-main transition" 
                 placeholder="0"
             />
           </div>
@@ -182,7 +182,7 @@ export default function AdminPage() {
           className={`w-full py-4 font-bold rounded-xl transition shadow-md text-lg
             ${loading || isOverLimit 
                 ? 'bg-slate-200 cursor-not-allowed text-slate-400' 
-                : 'bg-gradient-to-r from-valency-main to-valency-deep text-white hover:shadow-lg hover:scale-[1.01] active:scale-[0.98]'
+                : 'bg-gradient-to-r from-valence-main to-valence-deep text-white hover:shadow-lg hover:scale-[1.01] active:scale-[0.98]'
             }`}
         >
           {loading ? 'Enviando...' : `Salvar Produto`}

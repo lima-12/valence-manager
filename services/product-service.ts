@@ -1,5 +1,5 @@
-// services/product-service.ts
 import { supabase } from '@/lib/supabase'
+import { Product } from '@/types/product'
 
 export interface CreateProductDTO {
     name: string;
@@ -10,8 +10,8 @@ export interface CreateProductDTO {
 }
 
 export const ProductService = {
-  // Busca todos os produtos com suas imagens
-  async getAllProducts() {
+
+  async getAllProducts(): Promise<Product[]> {
     const { data, error } = await supabase
       .from('products')
       .select(`
@@ -27,7 +27,7 @@ export const ProductService = {
       throw new Error(error.message)
     }
 
-    return data
+    return data as Product[]
   },
 
   // Exemplo futuro: Buscar produto por ID

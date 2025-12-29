@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  /* Aqui definimos a paleta Valency */
-  --color-valency-light: #33CCFF;
-  --color-valency-sky: #2699E6;
-  --color-valency-main: #1A66CC;
-  --color-valency-deep: #0D33B3;
-  --color-valency-dark: #000099;
+  /* Aqui definimos a paleta valence */
+  --color-valence-light: #8DA9BF; /* Um tom mais claro do petróleo para bordas */
+  --color-valence-sky:   #5C7A91; /* Um tom médio para textos secundários */
+  --color-valence-main:  #3E5365; /* A COR PRINCIPAL (Botões, Destaques) */
+  --color-valence-deep:  #2C3E4F; /* Um tom mais escuro para Hover */
+  --color-valence-dark:  #1A2633; /* Quase preto, para títulos */
 }
 
 /* Configurações padrão do Next.js (opcional, mas bom manter) */
