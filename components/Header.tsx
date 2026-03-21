@@ -48,83 +48,77 @@ export default function Header() {
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled 
-            ? 'bg-white/90 backdrop-blur-md shadow-sm py-2' 
-            : 'bg-transparent py-4'
+            ? 'bg-white/90 backdrop-blur-md shadow-sm py-4'
+            : 'bg-transparent py-8'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between relative">
+        <div className="max-w-7xl mx-auto px-8 flex items-center justify-between relative">
           
-          {/* 1. ESQUERDA: NAVEGAÇÃO (DESKTOP) E MENU (MOBILE) */}
-          <div className="flex items-center flex-1">
+          {/* 1. ESQUERDA: MENU (MOBILE) + NAVEGAÇÃO & LUPA (DESKTOP) */}
+          <div className="flex items-center gap-2 md:gap-6 w-24 md:flex-1">
             <button 
               onClick={() => setIsMenuOpen(true)}
               className="md:hidden text-primary p-1"
             >
               <Menu size={22} strokeWidth={1.2} />
             </button>
+            <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="md:hidden p-1 text-primary">
+              <Search size={20} strokeWidth={1.2} />
+            </button>
             
             <nav className="hidden md:flex items-center gap-8">
               <Link href="/" className={`text-[10px] uppercase tracking-[0.2em] transition ${pathname === '/' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-primary'}`}>
                 Início
               </Link>
-              {/* <Link href="/colecao" className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition">
+              <Link href="/colecao" className={`text-[10px] uppercase tracking-[0.2em] transition ${pathname === '/colecao' ? 'text-primary font-bold' : 'text-muted-foreground hover:text-primary'}`}>
                 Coleção
-              </Link> */}
+              </Link>
+
+              {/* LUPA NA ESQUERDA (Resolvendo a sobreposição do nome) */}
+              <div className="flex items-center ml-2">
+                <AnimatePresence>
+                  {isSearchOpen && (
+                    <motion.div
+                      initial={{ width: 0, opacity: 0 }}
+                      animate={{ width: 130, opacity: 1 }}
+                      exit={{ width: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <input
+                        type="text"
+                        placeholder="BUSCAR..."
+                        className="bg-transparent border-b border-primary/20 text-[9px] tracking-[0.2em] uppercase focus:outline-none mr-3 pb-1 w-full"
+                        autoFocus
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="p-1 text-primary hover:scale-110 transition">
+                  <Search size={18} strokeWidth={1.2} />
+                </button>
+              </div>
             </nav>
           </div>
 
-          {/* 2. CENTRO: LOGO (SEMPRE CENTRALIZADA) */}
+          {/* 2. CENTRO: LOGO EM TEXTO (Ajustada para não cobrir os ícones) */}
           <div className="absolute left-1/2 -translate-x-1/2 flex-shrink-0">
-            <Link href="/">
-              <Image 
-                src="/logo-valence.png" 
-                alt="Valence Semijoias"
-                width={130}
-                height={45} 
-                priority
-                className={`transition-all duration-500 ${scrolled ? 'h-7 w-auto' : 'h-9 w-auto'}`}
-              />
+            <Link href="/" className="group block text-center">
+              {/* Diminuímos de text-4xl para text-3xl no modo estático para dar respiro */}
+              <h1 className={`font-serif text-primary uppercase tracking-[0.4em] transition-all duration-500 ${scrolled ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
+                Valence
+              </h1>
+              <div className="w-0 h-px bg-primary/20 mx-auto mt-1 transition-all duration-500 group-hover:w-full hidden md:block" />
             </Link>
           </div>
 
-          {/* 3. DIREITA: BUSCA, USER, SACOLA */}
-          <div className="flex items-center gap-2 md:gap-4 flex-1 justify-end">
-            
-            {/* Campo de Busca Expansível (Desktop) */}
-            <div className="hidden md:flex items-center">
-              <AnimatePresence>
-                {isSearchOpen && (
-                  <motion.input
-                    initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 160, opacity: 1 }}
-                    exit={{ width: 0, opacity: 0 }}
-                    type="text"
-                    placeholder="BUSCAR..."
-                    className="bg-transparent border-b border-primary/30 text-[9px] tracking-[0.2em] uppercase focus:outline-none mr-2 pb-1"
-                    autoFocus
-                  />
-                )}
-              </AnimatePresence>
-              <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="p-1 text-primary hover:scale-110 transition">
-                <Search size={20} strokeWidth={1.2} />
-              </button>
-            </div>
-
-            {/* Busca Mobile (Apenas ícone) */}
-            <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="md:hidden p-1 text-primary">
-              <Search size={20} strokeWidth={1.2} />
-            </button>
-
-            {/* Divisor Sutil no Desktop */}
-            <div className="hidden md:block h-4 w-[1px] bg-slate-200 mx-1" />
-
-            {/* User / Admin */}
+          {/* 3. DIREITA: USER & SACOLA */}
+          <div className="flex items-center gap-3 md:gap-5 w-24 md:flex-1 justify-end">
             {user ? (
-              <div className="flex items-center gap-2">
-                <Link href="/admin" className="p-1 text-primary hover:scale-110 transition" title="Painel Admin">
+              <div className="flex items-center gap-3">
+                <Link href="/admin" className="p-1 text-primary hover:scale-110 transition" title="Admin">
                   <User size={20} strokeWidth={1.2} />
                 </Link>
-                <button onClick={handleLogout} className="hidden md:block p-1 text-red-400/70 hover:text-red-600 transition">
+                <button onClick={handleLogout} className="hidden md:block p-1 text-red-400/60 hover:text-red-600 transition">
                   <LogOut size={16} strokeWidth={1.2} />
                 </button>
               </div>
@@ -134,15 +128,14 @@ export default function Header() {
               </Link>
             )}
 
-            {/* Carrinho */}
             <Link href="/carrinho" className="p-1 text-primary hover:scale-110 transition relative">
               <ShoppingBag size={20} strokeWidth={1.2} />
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-[8px] w-3 h-3 flex items-center justify-center rounded-full">0</span>
+              <span className="absolute -top-1 -right-1 bg-primary text-white text-[7px] w-3.5 h-3.5 flex items-center justify-center rounded-full font-bold">0</span>
             </Link>
           </div>
         </div>
 
-        {/* INPUT DE BUSCA MOBILE (ABRE ABAIXO DO HEADER) */}
+        {/* BUSCA MOBILE ABAIXO DO HEADER */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div 

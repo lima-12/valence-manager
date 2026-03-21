@@ -4,7 +4,7 @@ import Header from '@/components/Header'
 import Link from 'next/link'
 import DeleteButton from '@/components/DeleteButton'
 import Footer from '@/components/Footer'
-import { Edit3, Trash2, Plus } from 'lucide-react' // Ícones para manter o padrão
+import { Edit3, Trash2, Plus } from 'lucide-react'
 
 export const revalidate = 0 
 

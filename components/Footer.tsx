@@ -94,11 +94,12 @@ export default function Footer() {
 
         {/* Linha Inferior (Copyright) */}
         <div className="mt-20 pt-8 border-t border-accent-foreground/10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start">
-            <h2 className="font-serif text-xl uppercase tracking-[0.4em] text-white">
+          <div className="flex flex-col items-center md:items-start group">
+            {/* Texto Valence no Footer - Maior e mais espaçado para fechar o site */}
+            <h2 className="font-serif text-2xl md:text-3xl uppercase tracking-[0.5em] text-white transition-all duration-500 group-hover:tracking-[0.6em]">
               Valence
             </h2>
-            <p className="text-[9px] uppercase tracking-[0.2em] opacity-40 mt-1">
+            <p className="font-sans text-[9px] uppercase tracking-[0.25em] text-accent-foreground/40 mt-1.5">
               Semijoias com alma e propósito
             </p>
           </div>
