@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Fontes elegantes para a identidade da Valence
+const playfair = Playfair_Display({
   subsets: ["latin"],
+  variable: "--font-serif",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "Valence Semijoias",
-  description: "Catálogo exclusivo Valence",
+  title: "Valence Semijoias | Elegância Atemporal",
+  description: "Catálogo exclusivo de semijoias premium com acabamento artesanal.",
+  // VERIFICAÇÃO DO GOOGLE SEARCH CONSOLE
+  verification: {
+    google: "Lw2Yhnv9JA5dMz5HJCZKapN511lhV3jOCXG3zSng5g4",
+  },
 };
 
 export default function RootLayout({
@@ -23,10 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body
-        // Adicionei 'bg-slate-50' aqui no body para garantir que o fundo base não seja branco puro
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50`}
+        className={`${playfair.variable} ${inter.variable} antialiased bg-background`}
       >
         {children}
       </body>
