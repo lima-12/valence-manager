@@ -1,32 +1,47 @@
 'use client'
 
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateProductAction } from '@/actions/product-actions'
 import Swal from 'sweetalert2'
-import Link from 'next/link'
 
 export default function EditProductForm({ product }: { product: any }) {
   const [loading, setLoading] = useState(false)
   const [newFiles, setNewFiles] = useState<File[]>([])
-  // Fotos que já estão no banco
   const [existingImages, setExistingImages] = useState(product.product_images || [])
-  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]) // Guarda IDs ou URLs para deletar dps
+  const [imagesToDelete, setImagesToDelete] = useState<string[]>([])
 
   const router = useRouter()
 
-  const handleRemoveExisting = (url: string) => {
-    setExistingImages(existingImages.filter((img: any) => img.url !== url))
-    setImagesToDelete([...imagesToDelete, url])
+  const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selected = Array.from(e.target.files)
+      setNewFiles((prev) => [...prev, ...selected])
+    }
   }
+
+  const removeNewFile = (indexToRemove: number) => {
+    setNewFiles((prev) => prev.filter((_, index) => index !== indexToRemove))
+  }
+
+  const handleRemoveExisting = (url: string) => {
+    setExistingImages((prev: any[]) => prev.filter((img: any) => img.url !== url))
+    setImagesToDelete((prev) => [...prev, url])
+  }
+
+  const totalSize = newFiles.reduce((acc, file) => acc + file.size, 0)
+  const totalSizeMB = (totalSize / 1024 / 1024).toFixed(2)
+  const isOverLimit = totalSize > 20 * 1024 * 1024
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (isOverLimit) {
+      Swal.fire('Limite excedido', 'As novas imagens ultrapassam 20MB.', 'warning')
+      return
+    }
+
     const formData = new FormData(e.currentTarget)
-    
-    // Adicionamos as novas fotos ao formData
-    newFiles.forEach(file => formData.append('new_images', file))
-    // Informamos quais fotos antigas devem ser removidas
+    newFiles.forEach((file) => formData.append('new_images', file))
     formData.append('delete_images', JSON.stringify(imagesToDelete))
 
     setLoading(true)
@@ -43,94 +58,108 @@ export default function EditProductForm({ product }: { product: any }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10 animate-fade-up">
-      {/* BOTÃO VOLTAR SUTIL */}
-      <Link 
-        href="/admin" 
-        className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-[10px] uppercase tracking-[0.2em] mb-8 group"
-      >
-        <span className="group-hover:-translate-x-1 transition-transform">←</span> 
-        Voltar para listagem
-      </Link>
-  
-      <form onSubmit={handleSubmit} className="space-y-10 bg-white p-10 border border-muted/20 shadow-sm">
-        <div className="text-center mb-10">
-          <h1 className="font-serif text-3xl text-primary uppercase tracking-[0.25em]">Editar Peça</h1>
-          <div className="w-12 h-px bg-primary mx-auto mt-4" />
-        </div>
-  
-        <div className="grid grid-cols-1 gap-8">
-          <div className="group">
-            <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-1 tracking-widest">Nome da Joia</label>
-            <input 
-              name="name" 
-              defaultValue={product.name} 
-              className="w-full border-b border-muted/30 py-3 outline-none focus:border-primary transition-colors bg-transparent font-serif text-lg" 
-            />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-1 tracking-widest">Preço (BRL)</label>
-              <input 
-                name="price" 
-                type="number" 
-                step="0.01" 
-                defaultValue={product.price} 
-                className="w-full border-b border-muted/30 py-3 outline-none focus:border-primary transition-colors" 
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-1 tracking-widest">Estoque Atual</label>
-              <input 
-                name="quantity" 
-                type="number" 
-                defaultValue={product.quantity} 
-                className="w-full border-b border-muted/30 py-3 outline-none focus:border-primary transition-colors" 
-              />
-            </div>
-          </div>
-        </div>
-  
-        {/* GESTÃO DE IMAGENS ATUAIS */}
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="grid grid-cols-1 gap-6">
         <div>
-          <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-4 tracking-widest">Galeria Atual</label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {existingImages.map((img: any, i: number) => (
-              <div key={i} className="relative aspect-[4/5] overflow-hidden border border-muted/10 group">
-                <img src={img.url} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                <button 
-                  type="button" 
-                  onClick={() => handleRemoveExisting(img.url)}
-                  className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-red-500 hover:bg-red-500 hover:text-white rounded-full w-6 h-6 text-[10px] flex items-center justify-center transition-colors shadow-sm"
-                >✕</button>
-              </div>
-            ))}
-          </div>
+          <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mb-2">Nome da Peça</label>
+          <input
+            name="name"
+            type="text"
+            required
+            defaultValue={product.name}
+            className="w-full border-b border-slate-200 py-3 text-slate-800 outline-none focus:border-valence-main transition bg-transparent"
+            placeholder="Ex: Brinco Pérola Cravejada"
+          />
         </div>
-  
-        {/* ADICIONAR NOVAS IMAGENS */}
-        <div className="pt-8 border-t border-muted/10">
-          <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-4 text-center tracking-widest">Adicionar Novas Fotografias</label>
-          <div className="flex justify-center">
-            <input 
-              type="file" 
-              multiple 
-              accept="image/*" 
-              onChange={(e) => e.target.files && setNewFiles(Array.from(e.target.files))}
-              className="text-[10px] uppercase tracking-widest file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:uppercase file:tracking-widest file:bg-primary file:text-white hover:file:bg-accent transition-all cursor-pointer"
+
+        <div>
+          <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mb-2">Descrição Curta</label>
+          <textarea
+            name="description"
+            rows={2}
+            defaultValue={product.description || ''}
+            className="w-full border-b border-slate-200 py-3 text-slate-800 outline-none focus:border-valence-main transition bg-transparent resize-none"
+            placeholder="Detalhes sobre banho, pedras..."
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-8">
+          <div>
+            <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mb-2">Preço (R$)</label>
+            <input
+              name="price"
+              type="number"
+              step="0.01"
+              required
+              defaultValue={product.price}
+              className="w-full border-b border-slate-200 py-3 text-slate-800 outline-none focus:border-valence-main transition bg-transparent"
+              placeholder="0,00"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mb-2">Qtd em Estoque</label>
+            <input
+              name="quantity"
+              type="number"
+              required
+              defaultValue={product.quantity}
+              className="w-full border-b border-slate-200 py-3 text-slate-800 outline-none focus:border-valence-main transition bg-transparent"
+              placeholder="0"
             />
           </div>
         </div>
-  
-        <button 
-          type="submit" 
-          disabled={loading}
-          className="w-full py-5 bg-primary text-white font-bold uppercase tracking-[0.3em] text-[11px] hover:bg-accent transition-all disabled:bg-muted/30 shadow-lg hover:shadow-xl active:scale-[0.98]"
-        >
-          {loading ? 'Processando Alterações...' : 'Confirmar Atualização'}
-        </button>
-      </form>
-    </div>
+      </div>
+
+      <div className="pt-2">
+        <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mb-4 text-center">Galeria Atual</label>
+        <div className="grid grid-cols-4 gap-4">
+          {existingImages.map((img: any, i: number) => (
+            <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-slate-100 group">
+              <img src={img.url} alt="imagem atual" className="w-full h-full object-cover" />
+              <button
+                type="button"
+                onClick={() => handleRemoveExisting(img.url)}
+                className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="pt-4">
+        <label className="block text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mb-4 text-center">Adicionar Novas Fotos</label>
+
+        <div className="relative border-2 border-dashed border-slate-100 rounded-xl p-10 text-center hover:bg-slate-50 transition-colors group">
+          <input type="file" accept="image/*" multiple onChange={handleFileSelect} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+          <p className="text-slate-400 text-sm group-hover:text-valence-main transition-colors">Arraste ou clique para selecionar</p>
+          <p className="text-[10px] text-slate-300 mt-2 uppercase">{totalSizeMB} MB / 20 MB</p>
+        </div>
+
+        <div className="grid grid-cols-4 gap-4 mt-6">
+          {newFiles.map((file, index) => (
+            <div key={`${file.name}-${index}`} className="relative aspect-square rounded-lg overflow-hidden border border-slate-100 group">
+              <img src={URL.createObjectURL(file)} alt="nova imagem" className="w-full h-full object-cover" />
+              <button
+                type="button"
+                onClick={() => removeNewFile(index)}
+                className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        disabled={loading || isOverLimit}
+        className="w-full py-5 bg-valence-main text-white font-bold rounded-full transition-all shadow-lg text-[11px] uppercase tracking-[0.3em] hover:bg-valence-deep disabled:bg-slate-100 disabled:text-slate-300 active:scale-95"
+      >
+        {loading ? 'Processando...' : 'Salvar Alterações'}
+      </button>
+    </form>
   )
 }

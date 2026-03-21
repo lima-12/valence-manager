@@ -108,11 +108,12 @@ export async function updateProductAction(id: string, formData: FormData) {
   const name = formData.get('name') as string
   const price = parseFloat(formData.get('price') as string)
   const quantity = parseInt(formData.get('quantity') as string)
+  const description = (formData.get('description') as string) || ''
   const deleteImages = JSON.parse(formData.get('delete_images') as string || '[]')
   const newFiles = formData.getAll('new_images') as File[]
 
   // Update na tabela products
-  await supabase.from('products').update({ name, price, quantity }).eq('id', id)
+  await supabase.from('products').update({ name, price, quantity, description }).eq('id', id)
 
   // 2. Deletar imagens selecionadas
   if (deleteImages.length > 0) {
