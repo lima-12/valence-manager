@@ -14,7 +14,7 @@ export default async function ProductDetails({ params }: PageProps) {
   if (!product) notFound()
 
   const images = product.product_images || []
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   const whatsappMessage = encodeURIComponent(
     `Olá! Gostaria de realizar o pedido do produto: ${product.name}\nLink: ${baseUrl}/produto/${id}`
   )
@@ -48,7 +48,7 @@ export default async function ProductDetails({ params }: PageProps) {
             
             {images.length > 1 && (
               <div className="grid grid-cols-4 gap-4">
-                {images.slice(1).map((img, index) => (
+                {images.slice(1).map((img: { url: string }, index: number) => (
                   <div key={index} className="aspect-square bg-slate-50 rounded-xl overflow-hidden border border-slate-50">
                     <img src={img.url} alt="Galeria" className="w-full h-full object-cover" />
                   </div>
