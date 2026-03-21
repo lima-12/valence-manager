@@ -3,88 +3,93 @@ import ProductCard from '@/components/ProductCard'
 import Header from '@/components/Header'
 import Link from 'next/link'
 import DeleteButton from '@/components/DeleteButton'
+import Footer from '@/components/Footer'
+import { Edit3, Trash2, Plus } from 'lucide-react' // Ícones para manter o padrão
 
-// Garante que o Admin sempre veja os dados mais recentes do banco
 export const revalidate = 0 
 
 export default async function AdminDashboard() {
   let products = []
   
   try {
-    // Busca os produtos usando o Service que você já tem
     products = await ProductService.getAllProducts()
   } catch (error) {
     console.error('Erro ao carregar painel admin:', error)
-    return <div className="p-10 text-red-500">Erro ao carregar produtos no admin.</div>
+    return <div className="p-10 text-red-500 font-sans uppercase tracking-widest text-xs">Erro de conexão com o banco.</div>
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      
-      {/* Reutilizamos o Header para manter a identidade visual */}
+    <main className="min-h-screen bg-background">
       <Header />
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-20 animate-fade-up">
         
         {/* --- CABEÇALHO DO PAINEL --- */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
-          <div className="text-center md:text-left">
-            <h6 className="text-xl md:text-2xl font-serif text-valence-main uppercase tracking-widest text-sm mb-1">
-              Painel de Gestão
-            </h6>
-            <p className="text-slate-500 text-xs uppercase tracking-tighter">
-              {products.length} itens no catálogo
+        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+          <div className="text-left">
+            <h1 className="font-serif text-3xl md:text-4xl text-primary uppercase tracking-[0.2em] mb-3">
+              Gestão de Acervo
+            </h1>
+            <p className="text-muted-foreground text-[10px] uppercase tracking-[0.3em] font-medium">
+              {products.length} peças registradas no sistema
             </p>
           </div>
 
           <Link 
             href="/admin/novo" 
-            className="bg-valence-main hover:bg-valence-deep text-white px-8 py-3 rounded-full font-serif text-sm uppercase tracking-widest transition shadow-md hover:shadow-lg active:scale-95"
+            className="flex items-center gap-3 bg-primary text-white px-10 py-5 rounded-full font-sans text-[10px] uppercase tracking-[0.3em] transition-all hover:bg-accent hover:shadow-2xl active:scale-95 group"
           >
-            + Novo Produto
+            <Plus size={16} className="group-hover:rotate-90 transition-transform duration-300" />
+            Cadastrar Peça
           </Link>
         </div>
 
-        {/* --- GRID (IDÊNTICO AO SHOP) --- */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+        {/* GRID DE GESTÃO */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-20">
           {products?.map((product) => ( 
-            <div key={product.id} className="relative group">
+            <div key={product.id} className="relative flex flex-col group">
               
-              {/* Card visual original (agora restaurado) */}
+              {/* O Card agora é apenas visual, o Link de clique foi para os botões abaixo no Admin */}
               <ProductCard product={product} />
 
-              {/* BARRA DE AÇÕES - Visível por padrão no Admin */}
-              <div className="absolute top-3 right-3 flex gap-2 z-10">
-                
-                {/* BOTÃO EDITAR: Agora aponta para a página de edição */}
+              {/* BARRA DE AÇÕES: Sempre visível no Mobile, Hover sutil no Desktop */}
+              <div className="mt-3 flex items-center justify-between gap-2 px-1">
                 <Link 
                   href={`/admin/editar/${product.id}`}
-                  className="bg-white/95 backdrop-blur-sm p-2.5 rounded-full shadow-lg hover:bg-blue-50 text-blue-600 border border-slate-100 transition-all active:scale-90 flex items-center justify-center"
-                  title="Editar Produto"
+                  className="flex-1 flex items-center justify-center gap-2 bg-white border border-primary/20 text-primary py-2 rounded-md text-[9px] uppercase tracking-widest font-bold hover:bg-primary hover:text-white transition-all active:scale-95"
+                  title="Editar Peça"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                  <Edit3 size={12} strokeWidth={2} />
+                  <span className="hidden xs:inline">Editar</span>
                 </Link>
                 
-                {/* BOTÃO EXCLUIR: Seu DeleteButton que já criamos */}
                 <DeleteButton 
                   id={product.id}
-                  className="bg-white/95 backdrop-blur-sm p-2.5 rounded-full shadow-lg hover:bg-red-50 text-red-600 border border-slate-100 transition-all active:scale-90 flex items-center justify-center"
-                  title="Excluir Produto"
+                  className="flex-shrink-0 p-2 bg-white border border-red-100 text-red-500 rounded-md hover:bg-red-50 transition-colors active:scale-90"
+                  title="Excluir"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                  <Trash2 size={12} strokeWidth={2} />
                 </DeleteButton>
+              </div>
+
+              {/* Destaque visual discreto no Admin para o estoque */}
+              <div className="absolute top-2 left-2 pointer-events-none">
+                <span className={`text-[8px] uppercase tracking-tighter px-2 py-0.5 rounded-full ${product.quantity > 0 ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
+                  Estoque: {product.quantity}
+                </span>
               </div>
             </div>
           ))}
         </div>
         
-        {/* EMPTY STATE */}
         {products.length === 0 && (
-          <div className="text-center py-24">
-            <p className="font-serif text-slate-400 italic">Nenhum produto cadastrado no momento.</p>
+          <div className="text-center py-32 border-2 border-dashed border-muted/20">
+            <p className="font-serif text-muted-foreground italic tracking-widest">Inicie o seu catálogo adicionando a primeira joia.</p>
           </div>
         )}
       </div>
+
+      <Footer />
     </main>
   )
 }
