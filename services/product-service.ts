@@ -36,6 +36,7 @@ export const ProductService = {
       .from('products')
       .select('*, product_images(*)')
       .eq('id', id)
+      .order('display_order', { foreignTable: 'product_images', ascending: true })
       .single()
       
     if (error) throw error
