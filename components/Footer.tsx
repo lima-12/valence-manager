@@ -38,10 +38,10 @@ export default function Footer() {
               Atendimento
             </h3>
             <div className="flex flex-col gap-4 text-xs tracking-widest uppercase">
-              <a href="https://wa.me/seunumeroaqui" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href="https://wa.me/5591991824421" className="flex items-center gap-2 hover:text-white transition-colors">
                 <Phone size={14} strokeWidth={1.5} /> WhatsApp
               </a>
-              <a href="mailto:contato@valencesemijoias.com" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href="mailto:julianavalente11@gmail.com" className="flex items-center gap-2 hover:text-white transition-colors">
                 <Mail size={14} strokeWidth={1.5} /> E-mail
               </a>
               <p className="flex items-center gap-2 opacity-70">
