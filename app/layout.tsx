@@ -16,7 +16,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Valence Semijoias | Elegância Atemporal",
   description: "Catálogo exclusivo de semijoias premium com acabamento artesanal.",
-  // VERIFICAÇÃO DO GOOGLE SEARCH CONSOLE
   verification: {
     google: "Lw2Yhnv9JA5dMz5HJCZKapN511lhV3jOCXG3zSng5g4",
   },
