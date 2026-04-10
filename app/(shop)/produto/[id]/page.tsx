@@ -2,6 +2,7 @@ import { ProductService } from '@/services/product-service'
 import Header from '@/components/Header'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import AddToCartButton from '@/components/AddToCartButton'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -15,10 +16,6 @@ export default async function ProductDetails({ params }: PageProps) {
 
   const images = product.product_images || []
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
-  const whatsappMessage = encodeURIComponent(
-    `Olá! Gostaria de realizar o pedido do produto: ${product.name}\nLink: ${baseUrl}/produto/${id}`
-  )
-  const whatsappUrl = `https://wa.me/5591991824421?text=${whatsappMessage}`
 
   return (
     <main className="min-h-screen bg-white">
@@ -29,7 +26,7 @@ export default async function ProductDetails({ params }: PageProps) {
         {/* BOTÃO VOLTAR SUTIL */}
         <Link 
           href="/" 
-          className="inline-flex items-center gap-2 text-slate-400 hover:text-valence-main transition-colors text-[10px] uppercase tracking-[0.2em] mb-8 group"
+          className="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-[10px] uppercase tracking-[0.2em] mb-8 group"
         >
           <span className="group-hover:-translate-x-1 transition-transform">←</span> 
           Voltar para a vitrine
@@ -59,7 +56,7 @@ export default async function ProductDetails({ params }: PageProps) {
 
           {/* INFOS */}
           <div className="flex flex-col justify-center">
-            <h1 className="font-serif text-3xl md:text-4xl text-valence-main uppercase tracking-[0.2em] mb-4">
+            <h1 className="font-serif text-3xl md:text-4xl text-primary uppercase tracking-[0.4em] mb-4">
               {product.name}
             </h1>
             
@@ -74,13 +71,7 @@ export default async function ProductDetails({ params }: PageProps) {
               </p>
             </div>
 
-            <a 
-              href={whatsappUrl}
-              target="_blank"
-              className="w-full py-5 bg-[#25D366] text-white text-center text-[11px] font-bold uppercase tracking-[0.3em] rounded-full hover:shadow-xl transition-all shadow-md"
-            >
-              Realizar Pedido via WhatsApp
-            </a>
+            <AddToCartButton product={product} />
           </div>
         </div>
       </div>

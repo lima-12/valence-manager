@@ -7,8 +7,10 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
 import { User, Search, Menu, X, LogOut, ShoppingBag } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useCart } from '@/context/CartContext'
 
 export default function Header() {
+  const { cartCount } = useCart()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -130,7 +132,7 @@ export default function Header() {
 
             <Link href="/carrinho" className="p-1 text-primary hover:scale-110 transition relative">
               <ShoppingBag size={20} strokeWidth={1.2} />
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-[7px] w-3.5 h-3.5 flex items-center justify-center rounded-full font-bold">0</span>
+              <span className="absolute -top-1 -right-1 bg-primary text-white text-[7px] w-3.5 h-3.5 flex items-center justify-center rounded-full font-bold">{cartCount}</span>
             </Link>
           </div>
         </div>

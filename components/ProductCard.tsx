@@ -3,14 +3,36 @@
 import { Product } from '@/types/product'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useCart } from '@/context/CartContext'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
 
 interface ProductProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductProps) {
+  const { addToCart } = useCart()
   const images = product.product_images || []
   const hasSecondImage = images.length > 1
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addToCart(product)
+    
+    MySwal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: 'Adicionado à sacola',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+    })
+  }
 
   const formatPrice = (value: number) => {
     return value.toLocaleString('pt-BR', { 
@@ -68,9 +90,13 @@ export default function ProductCard({ product }: ProductProps) {
 
           {/* BOTÃO RÁPIDO NO HOVER (APENAS DESKTOP) */}
           <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 hidden md:block">
-             <div className="w-full bg-primary/90 backdrop-blur-sm text-white text-[9px] py-2 text-center uppercase tracking-[0.2em] font-medium">
-                Ver Detalhes
-             </div>
+             <button 
+                onClick={handleQuickAdd}
+                disabled={product.quantity === 0}
+                className="w-full bg-primary/90 backdrop-blur-sm text-white text-[9px] py-2 text-center uppercase tracking-[0.2em] font-medium hover:bg-accent transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed"
+             >
+                {product.quantity === 0 ? 'Esgotado' : 'Adicionar à Sacola'}
+             </button>
           </div>
         </div>
 
