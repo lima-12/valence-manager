@@ -3,9 +3,38 @@ import Header from '@/components/Header'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import AddToCartButton from '@/components/AddToCartButton'
+import type { Metadata } from 'next'
+import { getSiteUrl } from '@/lib/site-url'
 
 interface PageProps {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params
+  const product = await ProductService.getProductById(id)
+  if (!product) {
+    return { title: 'Produto' }
+  }
+  const images = product.product_images || []
+  const firstImage = images[0]?.url
+  const site = getSiteUrl()
+  return {
+    title: product.name,
+    description:
+      product.description?.slice(0, 160) ||
+      `${product.name} — Valence Semijoias.`,
+    openGraph: {
+      title: product.name,
+      description:
+        product.description?.slice(0, 160) ||
+        `${product.name} — Valence Semijoias.`,
+      url: `${site}/produto/${id}`,
+      images: firstImage ? [{ url: firstImage, alt: product.name }] : undefined,
+    },
+  }
 }
 
 export default async function ProductDetails({ params }: PageProps) {
@@ -15,7 +44,6 @@ export default async function ProductDetails({ params }: PageProps) {
   if (!product) notFound()
 
   const images = product.product_images || []
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
 
   return (
     <main className="min-h-screen bg-white">
