@@ -51,7 +51,9 @@ export default function EditProductForm({ product }: { product: any }) {
       router.push('/admin')
       router.refresh()
     } catch (error) {
-      Swal.fire('Erro', 'Falha ao atualizar produto.', 'error')
+      const message =
+        error instanceof Error ? error.message : 'Falha ao atualizar produto.'
+      Swal.fire('Erro', message, 'error')
     } finally {
       setLoading(false)
     }
